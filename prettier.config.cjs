@@ -1,44 +1,17 @@
 /** @type {import('prettier').Config} */
 module.exports = {
     arrowParens: 'avoid',
-    printWidth: 120,
-    endOfLine: 'lf',
-    bracketSpacing: true,
     bracketSameLine: true,
+    bracketSpacing: true,
+    endOfLine: 'lf',
     jsxSingleQuote: true,
-    tabWidth: 4,
-    useTabs: false,
+    overrides: [{ files: '*.json', options: { parser: 'json' } }],
+    printWidth: 120,
+    proseWrap: 'preserve',
     quoteProps: 'consistent',
     semi: false,
     singleQuote: true,
+    tabWidth: 4,
     trailingComma: 'none',
-    proseWrap: 'preserve',
-    plugins: ['@trivago/prettier-plugin-sort-imports'],
-    overrides: [{ files: '*.json', options: { parser: 'json' } }],
-
-    // prettier-plugin-sort-imports config
-    importOrder: [
-        '^(react/(.*)$)|^(react$)',
-        '^(next/(.*)$)|^(next$)',
-        '<THIRD_PARTY_MODULES>',
-        '',
-        '^types$',
-        '^@/types/(.*)$',
-        '^@/config/(.*)$',
-        '^@/lib/(.*)$',
-        '^@/hooks/(.*)$',
-        '^@/components/ui/(.*)$',
-        '^@/components/(.*)$',
-        '^@/registry/(.*)$',
-        '^@/styles/(.*)$',
-        '^@/app/(.*)$',
-        '',
-        '^[./]'
-    ],
-    importOrderSeparation: false,
-    importOrderSortSpecifiers: true,
-    importOrderBuiltinModulesToTop: true,
-    importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
-    importOrderMergeDuplicateImports: true,
-    importOrderCombineTypeAndValueImports: true
+    useTabs: false
 }
