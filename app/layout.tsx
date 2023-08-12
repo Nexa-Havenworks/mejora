@@ -17,13 +17,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang='en'>
+        <html lang='en' className='mx-scrollbar'>
             <head>
                 <link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
             </head>
             <body className={`${poppins.className} mx-auto max-w-7xl px-4 py-8 subpixel-antialiased sm:px-8 md:px-12`}>
-                <NavBar />
-                {children}
+                <div className='max-w-[calc(100% - 15px)] mx-auto'>
+                    <NavBar />
+                    <main className='flex flex-col justify-between'>{children}</main>
+                </div>
             </body>
         </html>
     )
