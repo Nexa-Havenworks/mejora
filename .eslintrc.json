@@ -20,6 +20,7 @@
         "no-var": "error",
         "object-curly-spacing": ["error", "always"],
         "quotes": ["error", "single"],
+        "react/self-closing-comp": "error",
         "semi": ["error", "never"],
         "simple-import-sort/exports": "error",
         "simple-import-sort/imports": "error",
