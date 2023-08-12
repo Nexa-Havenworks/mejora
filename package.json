@@ -7,12 +7,12 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@turbo/gen": "^1.9.7",
-    "eslint": "^7.32.0",
-    "eslint-config-custom": "workspace:*",
-    "prettier": "^2.5.1",
+    "@mejora/eslint-config-custom": "workspace:*",
+    "@turbo/gen": "1.10.12",
+    "eslint": "8.47.0",
+    "prettier": "3.0.1",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@8.6.10",
-  "name": "mejora-monorepo"
+  "packageManager": "pnpm@8.6.12",
+  "name": "@mejora/monorepo"
 }
