@@ -8,5 +8,6 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
-    "typescript.preferences.quoteStyle": "single"
+    "typescript.preferences.quoteStyle": "single",
+    "git.ignoreLimitWarning": true
 }
