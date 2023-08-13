@@ -3,5 +3,18 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "3.0.0",
     "hardhat": "2.17.1"
+  },
+  "scripts": {
+    "hardhat:compile": "hardhat compile",
+    "hardhat:deploy:goerli": "hardhat run --network goerli scripts/deploy.ts",
+    "hardhat:deploy:mainnet": "hardhat run --network mainnet scripts/deploy.ts",
+    "hardhat:deploy:local": "hardhat run --network localhost scripts/deploy.ts",
+    "hardhat:node": "hardhat node",
+    "hardhat:test": "hardhat test",
+    "hardhat:verify:goerli": "hardhat verify --network goerli 0x8864fca1b03Edd632a056A852a165c882C16C738",
+    "hardhat:verify:mainnet": "hardhat verify --network mainnet 0x"
+  },
+  "dependencies": {
+    "dotenv": "16.3.1"
   }
 }

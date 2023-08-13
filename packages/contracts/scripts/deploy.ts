@@ -1,21 +1,30 @@
-import { ethers } from "hardhat";
+import { ethers, config } from "hardhat";
+import fs from "fs";
+import path from "path";
+
+interface DeploymentInfo {
+  timestamp: string;
+  address: string;
+  // network: string;
+}
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  const messageBoard = await ethers.deployContract('MessageBoard') as any;
 
-  const lockedAmount = ethers.parseEther("0.001");
+  await messageBoard.waitForDeployment();
 
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
+  const deploymentInfo: DeploymentInfo = {
+    timestamp: new Date().toISOString(),
+    address: messageBoard.target,
+  };
 
-  await lock.waitForDeployment();
+  const logFilePath = path.join(__dirname, "deployments.log");
+  const logEntry = `${JSON.stringify(deploymentInfo)}\n`;
+
+  fs.appendFileSync(logFilePath, logEntry, "utf-8");
 
   console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
+    `MessageBoard deployed to ${messageBoard.target}`
   );
 }
 
