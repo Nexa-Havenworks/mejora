@@ -1,0 +1,35 @@
+specVersion: 0.0.4
+description: Reputation subgraph definition (The Graph).
+repository: https://github.com/Nexa-Havenworks/mejora
+schema:
+  file: ./packages/subgraph/schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Reputation
+    network: goerli
+    source:
+      address: "0x"
+      abi: Reputation
+      startBlock: 27620000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Group
+        - Member
+      abis:
+        - name: Reputation
+          file: ./packages/subgraph/abis/Reputation.json
+      eventHandlers:
+        - event: GroupCreated(indexed uint256,uint8,uint256)
+          handler: createGroup
+        - event: GroupAdminUpdated(indexed uint256,indexed address,indexed address)
+          handler: updateGroupAdmin
+        - event: MemberAdded(indexed uint256,uint256,uint256)
+          handler: addMember
+        - event: MemberRemoved(indexed uint256,uint256,uint256)
+          handler: removeMember
+        - event: ProofVerified(indexed uint256,bytes32)
+          handler: addVerifiedProof
+      file: ./packages/subgraph/src/mapping.ts
