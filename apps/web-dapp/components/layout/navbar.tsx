@@ -1,6 +1,9 @@
-import Link from 'next/link'
+'use client'
 
-import { Button } from '@/components/ui/button'
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import { Suspense } from 'react'
+import { Spinner } from '@/components/ui/spinner'
 
 const menuLinks = [
     { text: 'Home', path: '/' },
@@ -10,6 +13,11 @@ const menuLinks = [
 ]
 
 export const NavBar = () => {
+    const LoginDynamic = dynamic(() => import('@/components/web3login').then(module => module.Web3Login), {
+        loading: () => <Spinner />,
+        ssr: false
+    })
+
     return (
         <nav className='mb-8 flex items-baseline justify-between'>
             <ul className='flex space-x-8'>
@@ -21,14 +29,10 @@ export const NavBar = () => {
                     )
                 })}
             </ul>
-            <div className='flex'>
-                <Button className='text-base font-semibold text-[#4542B2]' variant='ghost'>
-                    Sign up
-                </Button>
-                <Button className='items-baseline rounded-full bg-[#4542B2] px-8 text-base font-semibold text-white'>
-                    Connect
-                </Button>
-            </div>
+
+            <Suspense>
+                <LoginDynamic />
+            </Suspense>
         </nav>
     )
 }
