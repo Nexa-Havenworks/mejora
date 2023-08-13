@@ -42,6 +42,16 @@ const config: HardhatUserConfig = {
     //     enabled: true,
     //   },
     // },
+
+    baseGoerli: {
+      url: `https://1rpc.io/base-goerli	`,
+      chainId: 84531,
+      accounts,
+      gasPrice: 1000000000 * 2,
+      blockGasLimit: 0x1fffffffffffff,
+      gasMultiplier: 10,
+    },
+
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
       chainId: 5,

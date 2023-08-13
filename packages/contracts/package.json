@@ -6,11 +6,13 @@
   },
   "scripts": {
     "hardhat:compile": "hardhat compile",
+    "hardhat:deploy:base-goerli": "hardhat run --network baseGoerli scripts/deploy.ts",
     "hardhat:deploy:goerli": "hardhat run --network goerli scripts/deploy.ts",
     "hardhat:deploy:mainnet": "hardhat run --network mainnet scripts/deploy.ts",
     "hardhat:deploy:local": "hardhat run --network localhost scripts/deploy.ts",
     "hardhat:node": "hardhat node",
     "hardhat:test": "hardhat test",
+    "hardhat:verify:baseGoerli": "hardhat verify --network baseGoerli 0x670F0ea1bbC0166aE57BF17D4015Ed418A5BfF61",
     "hardhat:verify:goerli": "hardhat verify --network goerli 0x8864fca1b03Edd632a056A852a165c882C16C738",
     "hardhat:verify:mainnet": "hardhat verify --network mainnet 0x"
   },

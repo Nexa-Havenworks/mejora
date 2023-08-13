@@ -1,3 +1,8 @@
+# Mejora Monorepo
+
+Contracts deployments:
+https://goerli.basescan.org/address/0x670F0ea1bbC0166aE57BF17D4015Ed418A5BfF61#code
+
 # Turborepo starter
 
 This is an official starter Turborepo.
