@@ -1,6 +1,7 @@
 {
     "extends": "@mejora/tsconfig/nextjs.json",
     "compilerOptions": {
+        "baseUrl": ".",
         "plugins": [{ "name": "next" }],
         "paths": { "@/*": ["./*"] }
     },

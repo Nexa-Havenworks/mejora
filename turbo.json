@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
+  "globalDependencies": ["apps/*/.env*", "contracts/.env*"],
+  "globalDotEnv": ["apps/web-dapp/.env"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
