@@ -9,13 +9,13 @@ import { NavBar } from '@/components/layout/navbar'
 import { Toaster } from '@/components/ui/toaster'
 
 const smartAccountOptions = {
-    activeNetworkId: ChainId.BASE_GOERLI_TESTNET as number,
-    supportedNetworksIds: [ChainId.BASE_GOERLI_TESTNET as number],
+    activeNetworkId: ChainId.GOERLI as number,
+    supportedNetworksIds: [ChainId.GOERLI as number],
     networkConfig: [
         {
-            chainId: ChainId.BASE_GOERLI_TESTNET as number,
+            chainId: ChainId.GOERLI as number,
             dappAPIKey: process.env.BICONOMY_DAPP_API_KEY as string,
-            providerUrl: 'https://1rpc.io/base-goerli'
+            providerUrl: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`
         }
     ]
 }

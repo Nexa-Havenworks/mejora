@@ -56,7 +56,7 @@ export const Web3Login = ({ smartAccountOptions }: Web3LoginProps) => {
         const signature2 = await sdk.whitelistUrl('https://verify.walletconnect.com')
         const signature1 = await sdk.whitelistUrl('https://mejora.vercel.app')
         await sdk.init({
-            chainId: ethers.utils.hexValue(ChainId.BASE_GOERLI_TESTNET),
+            chainId: ethers.utils.hexValue(ChainId.GOERLI),
             // network: 'testnet',
             whitelistUrls: {
                 'http://localhost:3000': signature3,
