@@ -1,28 +1,48 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
-import { ethers } from 'ethers'
 import { ChainId } from '@biconomy/core-types'
-import SocialLogin from '@biconomy/web3-auth'
 import SmartAccount from '@biconomy/smart-account'
-import { Button } from '@/components/ui/button'
-import { useToast } from '@/components/ui/use-toast'
-import { ToastAction } from '@/components/ui/toast'
+import SocialLogin from '@biconomy/web3-auth'
+import { ethers } from 'ethers'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 
-export const Web3Login = () => {
+import { Button } from '@/components/ui/button'
+import { ToastAction } from '@/components/ui/toast'
+import { useToast } from '@/components/ui/use-toast'
+import { UserNav } from '@/components/user-nav'
+
+interface Web3LoginProps {
+    smartAccountOptions: {
+        activeNetworkId: number
+        supportedNetworksIds: number[]
+        networkConfig: {
+            chainId: number
+            dappAPIKey: string
+            providerUrl: string
+        }[]
+    }
+}
+
+export const Web3Login = ({ smartAccountOptions }: Web3LoginProps) => {
+    const router = useRouter()
     const { toast } = useToast()
-    const [provider, setProvider] = useState<any>()
+    const [provider, setProvider] = useState<ethers.providers.Web3Provider>()
     const [account, setAccount] = useState<string>()
-    const [smartAccount, setSmartAccount] = useState<SmartAccount | null>(null)
+    const [, /*smartAccount*/ setSmartAccount] = useState<SmartAccount | null>(null)
     const [scwAddress, setScwAddress] = useState('')
-    const [scwLoading, setScwLoading] = useState(false)
+    const [, /*scwLoading*/ setScwLoading] = useState(false)
     const [socialLoginSDK, setSocialLoginSDK] = useState<SocialLogin | null>(null)
 
     const connectWeb3 = useCallback(async () => {
         if (typeof window === 'undefined') return
+
         console.log('socialLoginSDK', socialLoginSDK)
+
         if (socialLoginSDK?.provider) {
             const web3Provider = new ethers.providers.Web3Provider(socialLoginSDK.provider)
+
             setProvider(web3Provider)
+
             const accounts = await web3Provider.listAccounts()
             setAccount(accounts[0])
             return
@@ -32,13 +52,15 @@ export const Web3Login = () => {
             return socialLoginSDK
         }
         const sdk = new SocialLogin()
-        const signature2 = await sdk.whitelistUrl('http://localhost:3000/')
+        const signature3 = await sdk.whitelistUrl('http://localhost:3000')
+        const signature2 = await sdk.whitelistUrl('https://verify.walletconnect.com')
         const signature1 = await sdk.whitelistUrl('https://mejora.vercel.app')
         await sdk.init({
             chainId: ethers.utils.hexValue(ChainId.GOERLI),
-            network: 'testnet',
+            // network: 'testnet',
             whitelistUrls: {
-                'http://localhost:3000/': signature2,
+                'http://localhost:3000': signature3,
+                'https://verify.walletconnect.com': signature2,
                 'https://mejora.vercel.app': signature1
             }
         })
@@ -64,11 +86,14 @@ export const Web3Login = () => {
 
     // if wallet already connected close widget
     useEffect(() => {
-        console.log('hidelwallet')
-        if (socialLoginSDK && socialLoginSDK.provider) {
-            socialLoginSDK.hideWallet()
+        if (account) {
+            console.log('hiding wallet and redirecting')
+            if (socialLoginSDK && socialLoginSDK.provider) {
+                socialLoginSDK.hideWallet()
+            }
+            router.push('/profile')
         }
-    }, [account, socialLoginSDK])
+    }, [account, socialLoginSDK, router])
 
     // after metamask login -> get provider event
     useEffect(() => {
@@ -91,23 +116,24 @@ export const Web3Login = () => {
                 title: 'Your Web3 account is ready.',
                 description: (
                     <>
-                        We've created your account for you.
+                        We&apos;ve created your account for you.
                         <br />
                         Your Smart Account Address is:
                         <br />
-                        <span className='font-bold font-mono'>{scwAddress}</span>
+                        <span className='font-mono font-bold'>{scwAddress}</span>
                     </>
                 ),
                 action: <ToastAction altText='confetti'>Yay! 🎉</ToastAction>
             })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scwAddress])
 
-    const disconnectWeb3 = async () => {
+    const handleLogout = () => {
         if (!socialLoginSDK || !socialLoginSDK.web3auth) {
             console.error('Web3Modal not initialized.')
             return
         }
-        await socialLoginSDK.logout()
+        socialLoginSDK.logout()
         socialLoginSDK.hideWallet()
         setProvider(undefined)
         setAccount(undefined)
@@ -118,16 +144,7 @@ export const Web3Login = () => {
         async function setupSmartAccount() {
             setScwAddress('')
             setScwLoading(true)
-            const smartAccount: SmartAccount = new SmartAccount(provider, {
-                activeNetworkId: ChainId.GOERLI as any,
-                supportedNetworksIds: [ChainId.GOERLI] as any,
-                networkConfig: [
-                    {
-                        chainId: ChainId.GOERLI as any,
-                        dappAPIKey: process.env.WALLETCONNECT_DAPP_KEY
-                    }
-                ]
-            })
+            const smartAccount = new SmartAccount(provider as ethers.providers.Web3Provider, smartAccountOptions)
             await smartAccount.init()
             const context = smartAccount.getSmartAccountContext()
             setScwAddress(context.baseWallet.getAddress())
@@ -138,20 +155,27 @@ export const Web3Login = () => {
             setupSmartAccount()
             console.log('Provider...', provider)
         }
-    }, [account, provider])
+    }, [account, provider, smartAccountOptions])
 
     return (
-        <div className='flex'>
+        <div className='flex items-center'>
             {!account && (
                 <Button className='text-base font-semibold text-[#4542B2]' variant='ghost'>
                     Sign up
                 </Button>
             )}
-            <Button
-                className='items-baseline rounded-full bg-[#4542B2] px-8 text-base font-semibold text-white'
-                onClick={!account ? connectWeb3 : disconnectWeb3}>
-                {!account ? 'Login' : 'Logout'}
-            </Button>
+
+            <div>
+                {account ? (
+                    <UserNav address={scwAddress} logout={handleLogout} />
+                ) : (
+                    <Button
+                        className='items-baseline rounded-full bg-[#4542B2] px-8 text-base font-semibold text-white'
+                        onClick={connectWeb3}>
+                        Login
+                    </Button>
+                )}
+            </div>
         </div>
     )
 }

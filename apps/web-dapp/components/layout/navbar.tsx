@@ -3,16 +3,26 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Suspense } from 'react'
+
 import { Spinner } from '@/components/ui/spinner'
 
 const menuLinks = [
     { text: 'Home', path: '/' },
-    { text: 'Profile', path: '/profile/create' },
-    { text: 'Governance', path: '/governance' },
-    { text: 'Become a Mentor', path: '/mentor' }
+    { text: 'Governance', path: '/governance' }
 ]
+interface NavBarProps {
+    smartAccountOptions: {
+        activeNetworkId: number
+        supportedNetworksIds: number[]
+        networkConfig: {
+            chainId: number
+            dappAPIKey: string
+            providerUrl: string
+        }[]
+    }
+}
 
-export const NavBar = () => {
+export const NavBar = ({ smartAccountOptions }: NavBarProps) => {
     const LoginDynamic = dynamic(() => import('@/components/web3login').then(module => module.Web3Login), {
         loading: () => <Spinner />,
         ssr: false
@@ -31,7 +41,7 @@ export const NavBar = () => {
             </ul>
 
             <Suspense>
-                <LoginDynamic />
+                <LoginDynamic smartAccountOptions={smartAccountOptions} />
             </Suspense>
         </nav>
     )
